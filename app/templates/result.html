@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>抠图结果</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>抠图结果</h1>
+        </header>
+
+        <div class="info-card result-info">
+            <p>处理时间: {{ "%.2f"|format(metrics.total_time) }} 秒</p>
+            <p>背景设置: {{ bg_color_info }}</p>
+            <div class="metrics-details">
+                <p>图像尺寸: {{ metrics.image_size[0] }}x{{ metrics.image_size[1] }} 像素</p>
+                <p>预处理时间: {{ "%.2f"|format(metrics.preprocessing_time) }} 秒</p>
+                <p>推理时间: {{ "%.2f"|format(metrics.inference_time) }} 秒</p>
+                <p>后处理时间: {{ "%.2f"|format(metrics.postprocess_time) }} 秒</p>
+            </div>
+        </div>
+
+        <div class="result-container">
+            <div class="image-container">
+                <h2>原图</h2>
+                <img src="data:image/png;base64,{{ original_image }}" alt="原图" class="result-image">
+            </div>
+
+            <div class="image-container">
+                <h2>抠图结果</h2>
+                <div class="transparent-bg">
+                    <img src="data:image/png;base64,{{ result_image }}" alt="抠图结果" class="result-image">
+                </div>
+                <a href="data:image/png;base64,{{ result_image }}" download="result.png" class="download-button">下载结果</a>
+            </div>
+        </div>
+
+        <a href="/" class="back-button">返回首页</a>
+    </div>
+
+    <script>
+        // 下载功能
+        document.querySelector('.download-button').addEventListener('click', function(e) {
+            var fileName = "抠图结果_" + new Date().toISOString().replace(/[:.]/g, "-") + ".png";
+            this.setAttribute('download', fileName);
+        });
+    </script>
+</body>
+</html>

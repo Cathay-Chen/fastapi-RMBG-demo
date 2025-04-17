@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ config.APP_NAME }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>{{ config.APP_NAME }}</h1>
+        </header>
+
+        <div class="info-card">
+            <p>这是一个使用{{ config.RMBG_VERSION }}的图像抠图服务。上传图片，系统将自动移除背景并为您提供自定义背景的图像。</p>
+            <p>支持的格式: JPEG, PNG, WEBP等常见图像格式</p>
+        </div>
+
+        <form action="/api/remove-background" method="post" enctype="multipart/form-data" class="upload-form">
+            <div class="form-group">
+                <label for="file">选择图片:</label>
+                <input type="file" id="file" name="file" accept="image/*" required>
+                <div id="image-preview" class="image-preview"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="bg_type">背景类型:</label>
+                <select id="bg_type" name="bg_type" onchange="toggleBackgroundOptions()">
+                    <option value="transparent">透明背景</option>
+                    <option value="color">自定义颜色</option>
+                </select>
+            </div>
+
+            <div id="color-options" class="form-group color-options" style="display: none;">
+                <label for="bg_color_input">选择背景颜色:</label>
+                <div class="color-input-group">
+                    <input type="color" id="color_picker" value="#ffffff" onchange="updateColor()">
+                    <input type="text" id="bg_color" name="bg_color" value="#00000000" class="color-text">
+                    <span class="color-preview" id="color_preview"></span>
+                </div>
+
+                <div class="alpha-slider-group">
+                    <label for="alpha_slider">透明度: <span id="alpha_value">0%</span></label>
+                    <input type="range" id="alpha_slider" class="alpha-slider" min="0" max="255" value="0" onchange="updateAlpha()" oninput="updateAlpha()">
+                </div>
+
+                <div class="preset-colors-group">
+                    <p>预设颜色:</p>
+                    <div class="preset-colors">
+                        <div class="color-option transparent-preview" onclick="selectPresetColor('transparent')"></div>
+                        <div class="color-option" style="background-color: #FFFFFF;" onclick="selectPresetColor('#FFFFFF')"></div>
+                        <div class="color-option" style="background-color: #000000;" onclick="selectPresetColor('#000000')"></div>
+                        <div class="color-option" style="background-color: #FF0000;" onclick="selectPresetColor('#FF0000')"></div>
+                        <div class="color-option" style="background-color: #00FF00;" onclick="selectPresetColor('#00FF00')"></div>
+                        <div class="color-option" style="background-color: #0000FF;" onclick="selectPresetColor('#0000FF')"></div>
+                        <div class="color-option" style="background-color: #FFFF00;" onclick="selectPresetColor('#FFFF00')"></div>
+                        <div class="color-option" style="background-color: #FF00FF;" onclick="selectPresetColor('#FF00FF')"></div>
+                        <div class="color-option" style="background-color: #00FFFF;" onclick="selectPresetColor('#00FFFF')"></div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">开始抠图</button>
+        </form>
+
+        <div class="usage-guide">
+            <h2>使用说明</h2>
+            <ol>
+                <li>上传您要处理的图片</li>
+                <li>选择背景类型（透明或自定义颜色）</li>
+                <li>如果选择自定义颜色，可以通过颜色选择器或预设颜色进行选择</li>
+                <li>调整透明度滑块以控制背景的透明度</li>
+                <li>点击"开始抠图"按钮，等待处理结果</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

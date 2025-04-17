@@ -1,4 +1,4 @@
-# RMBG 模型抠图服务 API
+# RMBG 模型抠图服务 DEMO
 
 这是一个基于FastAPI和ONNX的图像抠图服务，使用RMBG模型进行背景移除。
 

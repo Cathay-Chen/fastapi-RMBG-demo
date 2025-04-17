@@ -22,8 +22,8 @@
 
 ```bash
 # 克隆代码库
-git clone https://github.com/yourusername/rmbg-api.git
-cd rmbg-api
+git clone https://github.com/Cathay-Chen/fastapi-RMBG-demo
+cd fastapi-RMBG-demo
 
 # 创建并激活虚拟环境
 python -m venv venv
@@ -39,7 +39,8 @@ pip install -r requirements.txt
 
 # 运行应用
 uvicorn app.main:app --reload
+
+# 使用Docker Compose启动服务
+docker-compose up -d
 ```
 
-### 使用Docker Compose启动服务
-docker-compose up -d

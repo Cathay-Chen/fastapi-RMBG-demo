@@ -5,6 +5,9 @@
 import base64
 import io
 from typing import Union, Tuple, Optional
+from typing import Dict, Any
+from app.services.segmentation import SegmentationService
+from app.utils.color_utils import parse_color, get_color_info
 
 from PIL import Image
 
@@ -93,3 +96,48 @@ def get_image_format(img: Image.Image) -> str:
     if format:
         return format
     return "PNG"  # 默认格式
+
+def process_image(
+    image: Image.Image,
+    bg_type: str,
+    bg_color: str,
+    segmentation_service: SegmentationService,
+) -> Dict[str, Any]:
+    """
+    处理图像并移除背景
+
+    参数:
+        image: PIL图像对象
+        bg_type: 背景类型 (transparent 或 color)
+        bg_color: 十六进制背景颜色值 (当bg_type=color时使用)
+        segmentation_service: 分割服务依赖
+
+    返回:
+        包含处理结果的字典
+    """
+    # 限制图片大小，避免过大的图片导致处理过慢
+    image = resize_image_to_limit(image, (3000, 3000))
+
+    # 处理背景颜色
+    background_color = None
+    if bg_type == "color":
+        background_color = parse_color(bg_color)
+        if background_color is None:
+            raise ValueError("无效的背景颜色格式")
+
+    # 使用服务进行抠图
+    result_image, metrics = segmentation_service.segment_image(image, bg_color if bg_type == "color" else None)
+
+    # 将图像转换为base64编码
+    result_base64 = image_to_base64(result_image)
+    orig_base64 = image_to_base64(image)
+
+    # 获取背景颜色信息
+    bg_color_info = get_color_info(background_color)
+
+    return {
+        "result_image": result_base64,
+        "original_image": orig_base64,
+        "metrics": metrics,
+        "bg_color_info": bg_color_info,
+    }

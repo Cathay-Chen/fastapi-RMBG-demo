@@ -97,7 +97,7 @@ class ModelManager:
                 "status": "loaded",
                 "model_path": self.model_path,
                 "input_size": self.model_input_size,
-                "model_name": metadata.name if metadata.name else "Unknown",
+                "model_name": getattr(metadata, "name", "Unknown"),  # 安全访问 name 属性
                 "inputs": [
                     {
                         "name": inp.name,
